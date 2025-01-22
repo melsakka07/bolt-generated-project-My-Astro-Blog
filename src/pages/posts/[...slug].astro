@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const { slug } = Astro.params;
+const post = await getCollection('posts', ({ slug: postSlug }) => postSlug === slug);
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await post[0].render();
+---
+
+<BaseLayout title={post[0].data.title}>
+  <article>
+    <h1>{post[0].data.title}</h1>
+    <p><em>{post[0].data.date.toDateString()}</em></p>
+    <Content />
+  </article>
+</BaseLayout>
